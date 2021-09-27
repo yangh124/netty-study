@@ -18,6 +18,14 @@ public class BasicBuffer {
         }
         //从Buffer 读取数据
         //将Buffer转换，读写切换
+        /*
+        public final Buffer flip() {
+            limit = position;
+            position = 0;
+            mark = -1;
+            return this;
+        }
+         */
         intBuffer.flip();
         while (intBuffer.hasRemaining()) {
             int i = intBuffer.get();
