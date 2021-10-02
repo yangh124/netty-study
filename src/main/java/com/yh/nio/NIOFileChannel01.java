@@ -7,6 +7,8 @@ import java.nio.channels.FileChannel;
 
 
 /**
+ * 写数据到文件
+ *
  * @author : yh
  * @date : 2021/9/27 22:26
  */
