@@ -54,6 +54,8 @@ public class NIOServer {
                 if (selectionKey.isAcceptable()) {
                     //为该客户端生成一个socketChannel
                     SocketChannel socketChannel = serverSocketChannel.accept();
+                    socketChannel.configureBlocking(false);
+                    System.out.println("客户端连接成功，生成一个SocketChannel->" + socketChannel.hashCode());
                     //将socketChannel 注册到selector，关注事件为OP_READ 同时关联一个Buffer
                     socketChannel.register(selector, SelectionKey.OP_READ, ByteBuffer.allocate(1024));
 
@@ -66,7 +68,6 @@ public class NIOServer {
                     channel.read(byteBuffer);
                     System.out.println("form 客户端 -> " + new String(byteBuffer.array()));
                 }
-
                 //最终手动移除selectionKey
                 selectionKeyIterator.remove();
             }
