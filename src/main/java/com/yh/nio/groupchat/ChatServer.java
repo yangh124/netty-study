@@ -39,7 +39,7 @@ public class ChatServer {
     public void listen() {
         try {
             while (true) {
-                int count = selector.select(2000);
+                int count = selector.select();
                 if (count > 0) {//有事件处理
                     Set<SelectionKey> selectionKeys = selector.selectedKeys();
                     Iterator<SelectionKey> iterator = selectionKeys.iterator();
@@ -48,6 +48,7 @@ public class ChatServer {
                         //监听 accept
                         if (key.isAcceptable()) {
                             SocketChannel socketChannel = listenChannel.accept();
+                            socketChannel.configureBlocking(false);
                             socketChannel.register(selector, SelectionKey.OP_READ);
                             System.out.println(socketChannel.getRemoteAddress() + " 上线了...");
                         }
@@ -55,7 +56,6 @@ public class ChatServer {
                         if (key.isReadable()) {
                             readData(key);
                         }
-
 
                         iterator.remove();
                     }
@@ -103,8 +103,9 @@ public class ChatServer {
     private void sendMessageForOther(String msg, SocketChannel self) throws IOException {
         System.out.println("服务器转发消息中...");
 
-        //遍历所有注册到selector上的SocketChannel
-        for (SelectionKey selectionKey : selector.selectedKeys()) {
+        //遍历所有注册到selector上的SocketChannel   *** keys()
+        Set<SelectionKey> selectionKeys = selector.keys();
+        for (SelectionKey selectionKey : selectionKeys) {
             Channel channel = selectionKey.channel();
             if (channel instanceof SocketChannel && !channel.equals(self)) {
                 SocketChannel targetChannel = (SocketChannel) channel;
@@ -116,6 +117,7 @@ public class ChatServer {
     }
 
     public static void main(String[] args) {
-
+        ChatServer chatServer = new ChatServer();
+        chatServer.listen();
     }
 }
