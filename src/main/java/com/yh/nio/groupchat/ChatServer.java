@@ -37,6 +37,9 @@ public class ChatServer {
     }
 
     public void listen() {
+
+        System.out.println("监听线程：" + Thread.currentThread().getName());
+
         try {
             while (true) {
                 int count = selector.select();
@@ -102,6 +105,7 @@ public class ChatServer {
 
     private void sendMessageForOther(String msg, SocketChannel self) throws IOException {
         System.out.println("服务器转发消息中...");
+        System.out.println("服务器转发消息给客户端线程：" + Thread.currentThread().getName());
 
         //遍历所有注册到selector上的SocketChannel   *** keys()
         Set<SelectionKey> selectionKeys = selector.keys();
@@ -119,5 +123,14 @@ public class ChatServer {
     public static void main(String[] args) {
         ChatServer chatServer = new ChatServer();
         chatServer.listen();
+    }
+}
+
+class MyHandler {
+
+    void readData() {
+    }
+
+    void sendMessageForOther() {
     }
 }
