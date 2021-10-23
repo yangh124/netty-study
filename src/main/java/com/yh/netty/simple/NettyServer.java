@@ -1,10 +1,7 @@
 package com.yh.netty.simple;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -51,10 +48,21 @@ public class NettyServer {
             //启动服务器（并绑定端口）
             ChannelFuture channelFuture = serverBootstrap.bind(6668).sync();
 
+            //给 channelFuture 注册监听器，监控我们关心的事件
+            channelFuture.addListener((ChannelFutureListener) future -> {
+                if (future.isSuccess()) {
+                    System.out.println("监听端口 6668 成功");
+                } else {
+                    System.out.println("监听端口 6668 失败");
+                }
+            });
+
+
             //监听通道关闭
             channelFuture.channel().closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully();
         }
     }
 
