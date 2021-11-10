@@ -33,7 +33,7 @@ public class TestHttpServerHandler extends SimpleChannelInboundHandler<HttpObjec
                 return;
             }
 
-            System.out.println("msg 类型 = " + msg.getClass());
+            System.out.println("msg 类型 = " + msg. getClass());
             System.out.println("客户端地址：" + ctx.channel().remoteAddress());
 
             ByteBuf byteBuf = Unpooled.copiedBuffer("hello，我是服务器！", StandardCharsets.UTF_8);
